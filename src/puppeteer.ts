@@ -45,8 +45,11 @@ export const urlToPng = async (url: string, viewport: Viewport) => {
 
   return await inBrowser(async (browser) => {
     const page = await browser.newPage();
-    await page.goto(url);
     await page.setViewport(viewport);
+    await page.goto(url, {
+      waitUntil: 'networkidle0', // Wait for all non-lazy loaded images to load
+    });
+    await page.waitForTimeout(4000)
 
     return await page.screenshot({ type: 'png' });
   });
@@ -62,3 +65,6 @@ export const urlToPdf = async (url: string) => {
     return await page.pdf({ format: 'a4', printBackground: true });
   });
 };
+
+
+

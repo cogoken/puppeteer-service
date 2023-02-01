@@ -5,6 +5,7 @@ import { validateUrl } from './url.utils';
 
 const inBrowser = async <T>(callback: (browser: Browser) => T) => {
   const browser = await puppeteer.launch({
+    headless: true,
     executablePath: config.chromeBinaryPath,
     // https://github.com/buildkite/docker-puppeteer/blob/master/example/integration-tests/index.test.js
     args: [
@@ -45,12 +46,15 @@ export const urlToPng = async (url: string, viewport: Viewport) => {
 
   return await inBrowser(async (browser) => {
     const page = await browser.newPage();
-    await page.setViewport(viewport);
+    await page.setDefaultNavigationTimeout(0);
     await page.goto(url, {
       waitUntil: 'networkidle0', // Wait for all non-lazy loaded images to load
     });
-    await page.waitForTimeout(4000)
-
+    // await page.waitForTimeout(5000);
+    await page.setViewport(viewport);
+    await page.waitForTimeout(5000);
+    await page.mouse.move(1000, 40);
+    await page.mouse.move(4000, 80);   
     return await page.screenshot({ type: 'png' });
   });
 };

@@ -52,9 +52,11 @@ export const urlToPng = async (url: string, viewport: Viewport) => {
     });
     // await page.waitForTimeout(5000);
     await page.setViewport(viewport);
-    await page.waitForTimeout(5000);
     await page.mouse.move(1000, 40);
-    await page.mouse.move(4000, 80);   
+    // await page.mouse.move(4000, 80); 
+    // await page.waitForTimeout(5000);
+    await page.waitForSelector('#root > div > div > div > div > div > div');
+    // page.waitForSelector('div.flex layout-centered')  
     return await page.screenshot({ type: 'png' });
   });
 };

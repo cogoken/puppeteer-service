@@ -11,6 +11,7 @@ RUN  apt-get update \
      && wget --quiet https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -O /usr/sbin/wait-for-it.sh \
      && chmod +x /usr/sbin/wait-for-it.sh
 
+
 EXPOSE 3000
 
 WORKDIR /app
@@ -41,3 +42,4 @@ RUN yarn install --frozen-lockfile --production && yarn cache clean
 EXPOSE 3000
 
 CMD node build/index.js
+

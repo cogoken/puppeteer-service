@@ -48,15 +48,12 @@ export const urlToPng = async (url: string, viewport: Viewport) => {
     const page = await browser.newPage();
     await page.setDefaultNavigationTimeout(0);
     await page.goto(url, {
-      waitUntil: 'networkidle0', // Wait for all non-lazy loaded images to load
+      waitUntil: ['load','networkidle0','domcontentloaded'], // Wait for all non-lazy loaded images to load
     });
-    // await page.waitForTimeout(5000);
     await page.setViewport(viewport);
-    await page.mouse.move(1000, 40);
-    // await page.mouse.move(4000, 80); 
-    // await page.waitForTimeout(5000);
-    await page.waitForSelector('#root > div > div > div > div > div > div');
-    // page.waitForSelector('div.flex layout-centered')  
+    // await page.waitForSelector('div.dc-chart');
+    // await page.mouse.move(1000, 40);
+    await page.waitForTimeout(5000);
     return await page.screenshot({ type: 'png' });
   });
 };

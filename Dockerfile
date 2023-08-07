@@ -21,7 +21,7 @@ COPY yarn.lock .
 
 FROM install as build
 
-RUN yarn install --frozen-lockfile && yarn cache clean
+RUN yarn install && yarn cache clean
 
 COPY . .
 
@@ -37,7 +37,7 @@ ENV NODE_ENV=production
 
 COPY --from=build /app/build /app/build
 
-RUN yarn install --frozen-lockfile --production && yarn cache clean
+RUN yarn install --production && yarn cache clean
 
 EXPOSE 3000
 

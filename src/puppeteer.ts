@@ -5,13 +5,14 @@ import { validateUrl } from './url.utils';
 
 const inBrowser = async <T>(callback: (browser: Browser) => T) => {
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: 'new',
     executablePath: config.chromeBinaryPath,
     // https://github.com/buildkite/docker-puppeteer/blob/master/example/integration-tests/index.test.js
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
+      '--hide-scrollbars',
     ],
   });
 
@@ -47,14 +48,13 @@ export const urlToPng = async (url: string, viewport: Viewport) => {
   return await inBrowser(async (browser) => {
     const page = await browser.newPage();
     await page.setDefaultNavigationTimeout(0);
-    await page.goto(url, {
-      waitUntil: ['load','networkidle0','domcontentloaded'], // Wait for all non-lazy loaded images to load
-    });
     await page.setViewport(viewport);
-    // await page.waitForSelector('div.dc-chart');
-    // await page.mouse.move(1000, 40);
-    await page.waitForTimeout(5000);
-    return await page.screenshot({ type: 'png' });
+    await page.goto('about:blank');    
+    await page.goto(url, {
+        waitUntil: ['load','networkidle0','domcontentloaded'], // Wait for all non-lazy loaded images to load
+      });
+    await page.setViewport(viewport);
+    return await page.screenshot({ type: 'png', fullPage: false });
   });
 };
 
